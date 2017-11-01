@@ -1,10 +1,36 @@
 {
+  "name": "dytt-reptitle",
+  "version": "1.0.0",
+  "description": "电影天堂爬虫",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HuangXiZhou/DyttReptitle.git"
+  },
+  "keywords": [
+    "Node.js",
+    "Reptitle"
+  ],
+  "author": "xizhouh@gmail.com",
+  "license": "MIT",
+  "bin": {
+    "reptitle": "./index.js"
+  },
+  "bugs": {
+    "url": "https://github.com/HuangXiZhou/DyttReptitle/issues"
+  },
+  "homepage": "https://github.com/HuangXiZhou/DyttReptitle#readme",
   "dependencies": {
-    "cheerio": "^0.22.0",
-    "express": "^4.15.2",
-    "http": "^0.0.0",
-    "https": "^1.0.0",
-    "iconv-lite": "^0.4.15",
-    "mongodb": "^2.2.25"
+    "chalk": "^2.3.0",
+    "cheerio": "^1.0.0-rc.2",
+    "commander": "^2.11.0",
+    "iconv-lite": "^0.4.19",
+    "inquirer": "^3.3.0",
+    "lodash": "^4.17.4",
+    "mongodb": "^2.2.33",
+    "ora": "^1.3.0"
   }
 }
