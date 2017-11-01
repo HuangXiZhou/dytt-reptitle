@@ -29,7 +29,6 @@ let connectTest = true
  * @param {String} dbUrl
  * @param {String} dbName
  */
-
 const testConnectDb = (dbUrl, dbName) => {
   mongoClient.connect(dbUrl + dbName, (err, db) => {
     if (err) {
@@ -50,7 +49,6 @@ const testConnectDb = (dbUrl, dbName) => {
  * @param {Number} page
  * @param {Number} i
  */
-
 const getTitleHref = (url, page, i, spinner, dataInclude) => {
   http.get(url + i + '.html', sres => {
     let chunks = []
@@ -85,7 +83,6 @@ const getTitleHref = (url, page, i, spinner, dataInclude) => {
  * @param {Number} n
  * @param {Function} spinner
  */
-
 const getBtLink = (urls, n, spinner, dataInclude) => {
   http.get('http://www.ygdy8.net' + urls[n].titleHref, sres => {
     let chunks = []
