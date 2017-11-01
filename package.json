@@ -1,6 +1,6 @@
 {
   "name": "dytt-reptitle",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "电影天堂爬虫",
   "main": "index.js",
   "scripts": {
