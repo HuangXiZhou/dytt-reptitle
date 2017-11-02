@@ -1,6 +1,8 @@
 # dytt-reptitle
 >电影天堂爬虫
 
+![MIT](https://img.shields.io/github/license/mashape/apistatus.svg)
+
 ## Usage
 
 ```bash
