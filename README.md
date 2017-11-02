@@ -1,7 +1,9 @@
 # dytt-reptitle
 >电影天堂爬虫
 
-![MIT](https://img.shields.io/github/license/mashape/apistatus.svg)
+[![MIT](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/HuangXiZhou/dytt-reptitle/blob/master/LICENSE)
+
+[![npm](https://img.shields.io/badge/npm-v1.0.3-brightgreen.svg)](https://www.npmjs.com/package/dytt-reptitle)
 
 ## Usage
 
