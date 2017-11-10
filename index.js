@@ -21,27 +21,6 @@ let btCount = 0
 let DB_BASE_URL = ''
 let DB_NAME = ''
 
-let connectTest = true
-
-/**
- * 测试数据库连接
- *
- * @param {String} dbUrl
- * @param {String} dbName
- */
-const testConnectDb = (dbUrl, dbName) => {
-  mongoClient.connect(dbUrl + dbName, (err, db) => {
-    if (err) {
-      console.log(chalk.red('Please start mongodb first'))
-      connectTest = false
-      return
-    } else {
-      console.log(chalk.green('Connect to the database successfully!'))
-      db.close()
-    }
-  })
-}
-
 /**
  * 获取详情页链接
  *
@@ -49,7 +28,7 @@ const testConnectDb = (dbUrl, dbName) => {
  * @param {Number} page
  * @param {Number} i
  */
-const getTitleHref = (url, page, i, spinner, dataInclude) => {
+const getTitleHref = (url, page, i, spinner, dataInclude, db) => {
   http.get(url + i + '.html', sres => {
     let chunks = []
     sres.on('data', chunk => {
@@ -65,12 +44,12 @@ const getTitleHref = (url, page, i, spinner, dataInclude) => {
         })
       })
       if(i < page) {
-        getTitleHref(BASE_URL, page, titleHrefCount ++, spinner, dataInclude)
+        getTitleHref(BASE_URL, page, titleHrefCount ++, spinner, dataInclude, db)
       } else {
         spinner.stop().succeed(chalk.green('Successful access to details page url'))
         spinner = ora(chalk.yellow('Downloading BT...')).start()
         spinner.color = 'yellow'
-        getBtLink(TITLE_HREF, btCount, spinner, dataInclude)
+        getBtLink(TITLE_HREF, btCount, spinner, dataInclude, db)
       }
     })
   })
@@ -83,7 +62,7 @@ const getTitleHref = (url, page, i, spinner, dataInclude) => {
  * @param {Number} n
  * @param {Function} spinner
  */
-const getBtLink = (urls, n, spinner, dataInclude) => {
+const getBtLink = (urls, n, spinner, dataInclude, db) => {
   http.get('http://www.ygdy8.net' + urls[n].titleHref, sres => {
     let chunks = []
     sres.on('data', chunk => {
@@ -194,10 +173,10 @@ const getBtLink = (urls, n, spinner, dataInclude) => {
       }
 
       if(n < urls.length - 1) {
-        getBtLink(urls, ++ btCount, spinner, dataInclude)
+        getBtLink(urls, ++ btCount, spinner, dataInclude, db)
       } else {
         spinner.stop().succeed(chalk.green('Success'))
-        saveData(MODEL, DB_BASE_URL, DB_NAME)
+        saveData(MODEL, DB_BASE_URL, DB_NAME, db)
       }
     })
   })
@@ -205,23 +184,57 @@ const getBtLink = (urls, n, spinner, dataInclude) => {
 
 /**
  * 数据存储
+ *
  * @param {Object} obj
  */
-const saveData = (obj, dbUrl, dbName) => {
-  mongoClient.connect(dbUrl + dbName, (err, db) => {
+const saveData = (obj, dbUrl, dbName, db) => {
+  let collection = db.collection('bt')
+  collection.removeMany((err, result) => {
     if(err) {
-      console.error(err)
-      return
+      console.log('')
+      console.log(chalk.red('🖐  There is something wrong with delete before data...'))
+      db.close()
     } else {
-      let collection = db.collection('bt')
-      collection.insertMany(obj, (err,result) => {
+      collection.insertMany(obj, (err, result) => {
         if (err) {
           console.error(err)
         } else {
-          console.log(chalk.green('Save the data successfully!'))
+          console.log('')
+          console.log(chalk.green('👌  Save the data successfully!'))
+          db.close()
         }
       })
-      db.close()
+    }
+  })
+}
+
+/**
+ * 主函数
+ *
+ * @param {String} dbUrl
+ * @param {String} dbName
+ * @param {String} baseUrl
+ * @param {Number} page
+ * @param {Number} titleHrefCount
+ * @param {Array} include
+ */
+const main = (config) => {
+  mongoClient.connect(config.answers.dbUrl + config.answers.dbName, (err, db) => {
+    if (err) {
+      console.log(chalk.red('😩  Please start mongodb first'))
+      console.log('--------------------------------')
+      console.log(chalk.yellow('👀  Try to use:'))
+      console.log('$ sudo mongod --config /usr/local/etc/mongod.conf')
+      console.log(chalk.yellow('to start the mongodb'))
+    } else {
+      console.log(chalk.green('🎉  Connect to the database successfully!'))
+      const spinner = ora()
+      setTimeout(() => {
+        spinner.text = chalk.yellow('Searching details page url...')
+        spinner.color = 'yellow'
+        spinner.start()
+      }, 300)
+      getTitleHref(config.baseUrl, config.answers.page, config.titleHrefCount, spinner, config.answers.include, db)
     }
   })
 }
@@ -237,7 +250,6 @@ program
     let config =  _.assign({
       dbUrl: '',
       dbName: '',
-      collectionName: '',
       page: 1,
       title: false,
       time: false,
@@ -261,15 +273,6 @@ program
         name: 'dbName',
         message: chalk.cyan('DBName:'),
         default: 'dytt-reptitle'
-      })
-    }
-
-    if(config.collectionName !== 'string') {
-      promps.push({
-        type: 'input',
-        name: 'collectionName',
-        message: chalk.cyan('CollectionName:'),
-        default: 'bt'
       })
     }
 
@@ -306,20 +309,12 @@ program
     }
 
     inquirer.prompt(promps).then(answers => {
-      DB_BASE_URL = answers.dbUrl
-      DB_NAME = answers.dbName
-      testConnectDb(DB_BASE_URL, DB_NAME)
-      if(connectTest) {
-        const spinner = ora()
-        setTimeout(() => {
-          spinner.text = chalk.yellow('Searching details page url...')
-          spinner.color = 'yellow'
-          spinner.start()
-        }, 300)
-        getTitleHref(BASE_URL, answers.page, titleHrefCount, spinner, answers.include)
-      } else {
-        console.log(chalk.red('Please start mongodb first'))
+      let config = {
+        answers: answers,
+        baseUrl: BASE_URL,
+        titleHrefCount: titleHrefCount,
       }
+      main(config)
     })
   })
   .on('--help', () => {
