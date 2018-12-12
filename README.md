@@ -3,6 +3,7 @@
 >dytt8.net reptile
 
 [![npm](https://img.shields.io/badge/npm-v1.0.3-brightgreen.svg)](https://www.npmjs.com/package/dytt-reptitle) [![Build Status](https://travis-ci.org/HuangXiZhou/dytt-reptitle.svg?branch=master)](https://travis-ci.org/HuangXiZhou/dytt-reptitle)
+[![codecov](https://codecov.io/gh/HuangXiZhou/dytt-reptitle/branch/master/graph/badge.svg)](https://codecov.io/gh/HuangXiZhou/dytt-reptitle)
 
 [![NPM](https://nodei.co/npm/dytt-reptitle.png?downloads=true&stars=true)](https://nodei.co/npm/dytt-reptitle)
 
