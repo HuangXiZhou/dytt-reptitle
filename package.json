@@ -4,7 +4,16 @@
   "description": "电影天堂爬虫",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint . --fix",
+    "test": "jest . --cache --silent",
+    "cov": "jest . --cache --coverage --silent",
+    "ci": "npm run lint && npm run cov",
+    "codecov": "cat ./coverage/lcov.info | codecov"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint && npm run test"
+    }
   },
   "repository": {
     "type": "git",
@@ -24,13 +33,29 @@
   },
   "homepage": "https://github.com/HuangXiZhou/DyttReptitle#readme",
   "dependencies": {
-    "chalk": "^2.3.0",
+    "bluebird": "^3.5.3",
     "cheerio": "^1.0.0-rc.2",
-    "commander": "^2.11.0",
-    "iconv-lite": "^0.4.19",
-    "inquirer": "^3.3.0",
-    "lodash": "^4.17.4",
-    "mongodb": "^2.2.33",
-    "ora": "^1.3.0"
+    "iconv-lite": "^0.4.24",
+    "p-limit": "^2.0.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2"
+  },
+  "devDependencies": {
+    "codecov.io": "^0.1.6",
+    "cz-conventional-changelog": "^2.1.0",
+    "eslint": "^5.10.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jest": "^22.1.2",
+    "eslint-plugin-node": "^8.0.0",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "husky": "^1.2.0",
+    "jest": "^23.6.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
