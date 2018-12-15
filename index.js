@@ -48,7 +48,7 @@ function handleGetMovieDetails (cheerio, uri, config) {
     }
     if (item === 'desc') {
       const desc = cheerio(MOVIE_DESC_SELETOR).text();
-      if (desc) result[item] = desc.match(/(◎简　　介=?)(.*)(?=【下载地址】)/)[2].match(/(.*)(?=◎)/)[0].replace(/\s/g, ''); // eslint-disable-line
+      if (desc) result[item] = desc;
       else return false;
     }
     if (item === 'downloadLink') {
